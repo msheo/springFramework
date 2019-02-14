@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.spring.edu.mapper.BoardMapper">
+
+	<select id="getBoardList" parameterType="com.spring.edu.vo.BoardVO" resultType="com.spring.edu.vo.BoardVO">
+		SELECT SEQ seq
+			, TITLE title
+			, CONTENT content
+			, WRITER writer
+			, CNT cnt
+			, REG_DATE regDate	
+		FROM BOARD
+		<where>
+			<if test="searchCondition == 'TITLE'">
+				AND TITLE LIKE '%' || #{searchKeyword} || '%'
+			</if>
+			<if test="searchCondition == 'CONTENT'">
+				AND CONTENT LIKE '%' || #{searchKeyword} || '%'
+			</if>
+		</where>
+	</select>
+	
+	<select id="getBoard" parameterType="int" resultType="com.spring.edu.vo.BoardVO">
+		SELECT SEQ seq
+			, TITLE title
+			, CONTENT content
+			, WRITER writer
+			, CNT cnt
+			, REG_DATE regDate	
+		FROM BOARD
+		WHERE SEQ= #{seq}
+	</select>
+	
+	<update id="updateBoardCnt" parameterType="int">
+		UPDATE BOARD
+		SET CNT = CNT+1
+		WHERE SEQ=#{seq}
+	</update>
+	
+	<insert id="insertBoard" parameterType="com.spring.edu.vo.BoardVO">
+		INSERT INTO BOARD
+		(
+			TITLE,
+			CONTENT,
+			WRITER,
+			CNT,
+			REG_DATE
+		)
+		VALUES
+		(
+			#{title},
+			#{content},
+			#{writer},
+			0,
+			SYSDATE
+		)
+	</insert>
+	
+	<update id="updateBoard" parameterType="com.spring.edu.vo.BoardVO">
+		UPDATE BOARD
+		SET TITLE = #{title},
+			CONTENT=#{content},
+			WRITER=#{writer}
+		WHERE SEQ=#{seq}
+	</update>
+	
+	<delete id="deleteBoard" parameterType="int">
+		DELETE
+		FROM BOARD
+		WHERE SEQ=#{seq}
+	</delete>
+
+</mapper>
